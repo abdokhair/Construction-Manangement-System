@@ -4,6 +4,7 @@ from odoo import api, fields, models, exceptions
 class ConstructionProject(models.Model):
     _name = 'construction.project'
     _description = 'Projects'
+    _rec_name = 'project_name'
 
     project_name = fields.Char(string='Project Name', required=True)
     project_code = fields.Char(string='Project Code')
