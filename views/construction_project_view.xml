@@ -107,6 +107,9 @@
                         <group string="Project Information">
                             <field name="customer"/>
                             <field name="project_manager"/>
+                            <field name="workforce_ids" widget="many2many_tags" readonly="1"/>
+                            <field name="site_ids" widget="many2many_tags"
+                                   help="Sites can't be edited here. Use the 'Sites' tab below to add or edit Sites."/>
                         </group>
 
                         <group string="Project Dates">
@@ -121,6 +124,19 @@
                     <group string="Description">
                         <field name="description"/>
                     </group>
+                    <notebook>
+                        <page string="Sites">
+                            <field name="site_ids">
+                                <tree editable="bottom">
+                                    <field name="site_name"/>
+                                    <field name="location"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -148,7 +164,7 @@
     <menuitem
             id="projects_menu_item"
             name="Projects"
-            parent="projects_menu"
+            parent="construction_menu"
             action="projects_action"
             sequence="1"
     />
