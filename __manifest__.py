@@ -1,6 +1,6 @@
 {
     'name': "Construction Management",
-    'author': "Abdelsalam",
+    'author': "Abdlesalam",
     'category': '',
     'version': '17.0.0.1.0',
     'depends': ['base', 'contacts', 'account'],
@@ -16,6 +16,7 @@
         'views/construction_attendance_view.xml',
         'views/construction_payroll_view.xml',
         'views/construction_site_material_view.xml',
+        'views/construction_task_view.xml',
     ],
 
     'application': True,
