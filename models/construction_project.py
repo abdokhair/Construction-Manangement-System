@@ -41,6 +41,47 @@ class ConstructionProject(models.Model):
         string="Total Expense",
         compute="_compute_total_expense"
     )
+    total_material_cost = fields.Float(
+        string="Total Material Cost",
+        compute="_compute_total_material_cost"
+    )
+
+    total_project_cost = fields.Float(
+        string="Total Project Cost",
+        compute="_compute_total_project_cost"
+    )
+
+    invoice_ids = fields.One2many(
+        'construction.invoice',
+        'project_id',
+        string='Invoices'
+    )
+
+    total_paid = fields.Float(
+        string="Total Paid",
+        compute="_compute_total_paid",
+        store=True
+    )
+
+    remaining_amount = fields.Float(
+        string="Remaining Amount",
+        compute="_compute_total_paid",
+        store=True
+    )
+
+    remaining_status = fields.Char(
+        string="Payment Status",
+        compute="_compute_remaining_status",
+        store=True
+    )
+
+    @api.depends('remaining_amount')
+    def _compute_remaining_status(self):
+        for rec in self:
+            if rec.remaining_amount == 0:
+                rec.remaining_status = " All project expenses have been paid.✅"
+            else:
+                rec.remaining_status = f" Remaining payment: {rec.remaining_amount}"
 
     def action_draft(self):
         for rec in self:
@@ -80,3 +121,20 @@ class ConstructionProject(models.Model):
     def _compute_total_expense(self):
         for rec in self:
             rec.total_expense = sum(rec.expense_ids.mapped('amount'))
+
+    @api.depends('site_ids.total_material_cost')
+    def _compute_total_material_cost(self):
+        for rec in self:
+            rec.total_material_cost = sum(rec.site_ids.mapped('total_material_cost'))
+
+    @api.depends('total_material_cost', 'total_expense')
+    def _compute_total_project_cost(self):
+        for rec in self:
+            rec.total_project_cost = rec.total_material_cost + rec.total_expense
+
+    @api.depends('invoice_ids.paid_amount', 'invoice_ids.state', 'total_project_cost')
+    def _compute_total_paid(self):
+        for rec in self:
+            total_paid = sum(rec.invoice_ids.filtered(lambda i: i.state == 'paid').mapped('paid_amount'))
+            rec.total_paid = total_paid
+            rec.remaining_amount = max(rec.total_project_cost - total_paid, 0.0)

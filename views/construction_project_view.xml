@@ -121,6 +121,10 @@
                         <field name="budget"/>
                         <field name="expense_ids" widget="many2many_tags"/>
                     </group>
+                    <group string="Project Payment Summary" colspan="4">
+                        <field name="total_paid" readonly="1" class="oe_highlight"/>
+                        <field name="remaining_status" readonly="1" class="oe_highlight"/>
+                    </group>
 
                     <group string="Description">
                         <field name="description"/>
@@ -147,7 +151,9 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
+                                <field name="total_material_cost"/>
                                 <field name="total_expense"/>
+                                <field name="total_project_cost"/>
                             </group>
                         </page>
                     </notebook>
